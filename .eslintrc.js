@@ -12,5 +12,8 @@ module.exports = {
   },
   rules: {
     'no-plusplus': 'off',
+    'import/extensions': ['error', 'ignorePackages', {
+      js: 'always',
+    }],
   },
 };
