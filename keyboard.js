@@ -18,6 +18,7 @@ class Keyboard {
     for (let i = 0; i < row.length; i++) {
       const key = document.createElement('button');
       key.className = 'key';
+      key.id = Object.keys(row[i]);
       key.textContent = Object.values(row[i])[0].name;
       keysRow.append(key);
     }

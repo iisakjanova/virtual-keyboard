@@ -2,4 +2,22 @@
   width: 80px;
   height: 50px;
   margin: 5px;
+  background: linear-gradient(45deg, #c0cfff, #a39ee2);
+  cursor: pointer;
+  border: transparent;
+  border-radius: 5px;
+}
+
+.key:hover {
+  background: linear-gradient(to bottom, #502d6c 0%, #1c0e3b 100%);
+  color: aliceblue;
+}
+
+.key:focus-visible {
+  outline: none;
+}
+
+.pressed {
+  background: linear-gradient(to bottom, #502d6c 0%, #1c0e3b 100%);
+  color: aliceblue;
 }
