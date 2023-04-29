@@ -15,5 +15,6 @@ module.exports = {
     'import/extensions': ['error', 'ignorePackages', {
       js: 'always',
     }],
+    'no-underscore-dangle': ['error', { allow: ['_render'] }],
   },
 };

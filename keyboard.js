@@ -1,17 +1,20 @@
 import {
-  FIRST_ROW, SECOND_ROW, THIRD_ROW, FOURTH_ROW, FIFTH_ROW,
+  FIRST_ROW, SECOND_ROW, THIRD_ROW, FOURTH_ROW, FIFTH_ROW, KEYS_TO_IGNORE_VALUE,
 } from './keysData.js';
 
 class Keyboard {
-  constructor() {
+  constructor(container, onKeyClick) {
     this.firstRow = FIRST_ROW;
     this.secondRow = SECOND_ROW;
     this.thirdRow = THIRD_ROW;
     this.fourthRow = FOURTH_ROW;
     this.fifthRow = FIFTH_ROW;
+    this.shift = false;
+    this.onKeyClick = onKeyClick;
+    this.container = container;
   }
 
-  static createKeysRow = (row) => {
+  createKeysRow = (row) => {
     const keysRow = document.createElement('div');
     keysRow.className = 'row';
 
@@ -19,33 +22,115 @@ class Keyboard {
       const key = document.createElement('button');
       key.className = 'key';
       key.id = Object.keys(row[i]);
-      key.textContent = Object.values(row[i])[0].name;
+      const { name, shiftName } = Object.values(row[i])[0];
+      const label = this.shift && shiftName ? shiftName : name;
+      key.textContent = label;
       keysRow.append(key);
     }
 
     return keysRow;
   };
 
+  handleShiftDown = (id) => {
+    this.shift = true;
+    this.updateKeyboard();
+    const keyShift = document.getElementById(id);
+    keyShift.classList.add('pressed');
+  };
+
+  handleShiftUp = () => {
+    this.shift = false;
+    this.updateKeyboard();
+  };
+
+  updateKeyboard = () => {
+    if (this.keyboard) {
+      this.container.removeChild(this.keyboard);
+    }
+
+    this._render();
+  };
+
   render = () => {
-    const keyboard = document.createElement('div');
-    keyboard.className = 'keyboard';
+    this._render();
+    this.addEvents();
+  };
 
-    const firstRow = Keyboard.createKeysRow(this.firstRow);
-    keyboard.append(firstRow);
+  _render = () => {
+    this.keyboard = document.createElement('div');
+    this.keyboard.className = 'keyboard';
 
-    const secondRow = Keyboard.createKeysRow(this.secondRow);
-    keyboard.append(secondRow);
+    const firstRow = this.createKeysRow(this.firstRow);
+    this.keyboard.append(firstRow);
 
-    const thirdRow = Keyboard.createKeysRow(this.thirdRow);
-    keyboard.append(thirdRow);
+    const secondRow = this.createKeysRow(this.secondRow);
+    this.keyboard.append(secondRow);
 
-    const fourthRow = Keyboard.createKeysRow(this.fourthRow);
-    keyboard.append(fourthRow);
+    const thirdRow = this.createKeysRow(this.thirdRow);
+    this.keyboard.append(thirdRow);
 
-    const fifthRow = Keyboard.createKeysRow(this.fifthRow);
-    keyboard.append(fifthRow);
+    const fourthRow = this.createKeysRow(this.fourthRow);
+    this.keyboard.append(fourthRow);
 
-    return keyboard;
+    const fifthRow = this.createKeysRow(this.fifthRow);
+    this.keyboard.append(fifthRow);
+
+    this.container.append(this.keyboard);
+
+    this.keyboard.addEventListener('click', (event) => {
+      const keyId = event.target.id;
+      const button = document.getElementById(keyId);
+
+      if (button && !KEYS_TO_IGNORE_VALUE[keyId]) {
+        if (keyId === 'Space') {
+          this.onKeyClick(' ');
+        } else if (keyId === 'Tab') {
+          this.onKeyClick('  ');
+        } else {
+          this.onKeyClick(event.target.innerText);
+        }
+      }
+    });
+  };
+
+  addEvents = () => {
+    document.addEventListener('keydown', (event) => {
+      const keyId = event.code;
+      const button = document.getElementById(keyId);
+
+      // Highlight pressed button
+      if (button) {
+        button.classList.add('pressed');
+        if (!KEYS_TO_IGNORE_VALUE[keyId]) {
+          if (keyId === 'ArrowLeft' || keyId === 'ArrowRight' || keyId === 'ArrowUp' || keyId === 'ArrowDown') {
+            this.onKeyClick(button.innerHTML);
+          } else if (keyId === 'Tab') {
+            event.preventDefault();
+            this.onKeyClick('  ');
+          } else {
+            this.onKeyClick(event.key);
+          }
+        }
+      }
+
+      if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+        this.handleShiftDown(event.code);
+      }
+    });
+
+    document.addEventListener('keyup', (event) => {
+      const keyId = event.code;
+      const button = document.getElementById(keyId);
+
+      // Return button to normal state
+      if (button) {
+        button.classList.remove('pressed');
+      }
+
+      if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+        this.handleShiftUp();
+      }
+    });
   };
 }
 

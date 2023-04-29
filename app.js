@@ -6,23 +6,19 @@ const app = document.createElement('div');
 app.className = 'app';
 page.append(app);
 
-const keyboard = new Keyboard();
-app.append(keyboard.render());
+const textInput = document.createElement('textarea');
+textInput.className = 'textInput';
+textInput.value = '';
+app.append(textInput);
 
-document.addEventListener('keydown', (event) => {
-  const keyId = event.code;
-  const button = document.getElementById(keyId);
+const keyboardKontainer = document.createElement('div');
+keyboardKontainer.className = 'keyboard-container';
+app.append(keyboardKontainer);
 
-  if (button) {
-    button.classList.add('pressed');
-  }
-});
+function handleKeyClick(letter) {
+  textInput.value += letter;
+}
 
-document.addEventListener('keyup', (event) => {
-  const keyId = event.code;
-  const button = document.getElementById(keyId);
+const keyboard = new Keyboard(keyboardKontainer, handleKeyClick);
 
-  if (button) {
-    button.classList.remove('pressed');
-  }
-});
+keyboard.render();
