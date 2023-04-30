@@ -12,7 +12,7 @@ class Keyboard {
     this.capitalization = false;
     this.onKeyClick = onKeyClick;
     this.container = container;
-    this.langugage = 'en';
+    this.language = localStorage.getItem('language') || 'en';
     this.meta = 'false';
   }
 
@@ -29,9 +29,9 @@ class Keyboard {
       } = Object.values(row[i])[0];
       let label;
 
-      if (this.capitalization && this.langugage === 'ru') {
+      if (this.capitalization && this.language === 'ru') {
         label = ruShiftName || shiftName || name;
-      } else if (this.langugage === 'ru') {
+      } else if (this.language === 'ru') {
         label = ruName || name;
       } else {
         label = this.capitalization && shiftName ? shiftName : name;
@@ -157,7 +157,7 @@ class Keyboard {
       }
 
       if (keyId === 'MetaRight' || keyId === 'MetaLeft') {
-        this.langugage = this.langugage === 'ru' ? 'en' : 'ru';
+        this.language = this.language === 'ru' ? 'en' : 'ru';
         this.updateKeyboard();
       }
     });
@@ -180,10 +180,8 @@ class Keyboard {
           } else if (keyId === 'Tab') {
             event.preventDefault();
             this.onKeyClick('  ');
-          } else if (keyId === 'Space' && this.meta) {
-            this.langugage = !this.langugage;
           } else {
-            this.onKeyClick(event.key);
+            this.onKeyClick(button.innerHTML);
           }
         }
       }
@@ -206,7 +204,8 @@ class Keyboard {
       }
 
       if (event.key === 'Meta') {
-        this.langugage = this.langugage === 'ru' ? 'en' : 'ru';
+        this.language = this.language === 'ru' ? 'en' : 'ru';
+        localStorage.setItem('language', this.language);
         this.updateKeyboard();
         const key = document.getElementById(event.code);
         key.classList.add('pressed');
