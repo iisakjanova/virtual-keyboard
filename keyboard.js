@@ -107,6 +107,18 @@ class Keyboard {
 
     this.container.append(this.keyboard);
 
+    this.keyboard.addEventListener('mousedown', (event) => {
+      const keyId = event.target.id;
+      const button = document.getElementById(keyId);
+      button.classList.add('pressed');
+    });
+
+    this.keyboard.addEventListener('mouseup', (event) => {
+      const keyId = event.target.id;
+      const button = document.getElementById(keyId);
+      button.classList.remove('pressed');
+    });
+
     this.keyboard.addEventListener('click', (event) => {
       const keyId = event.target.id;
       const button = document.getElementById(keyId);
