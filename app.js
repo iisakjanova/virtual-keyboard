@@ -31,3 +31,8 @@ const descriptionText = document.createElement('p');
 descriptionText.textContent = 'The keyboard is created in MacOS';
 descriptionText.className = 'description';
 app.append(descriptionText);
+
+const instruction = document.createElement('p');
+instruction.textContent = 'To switch language press \'command\'';
+instruction.className = 'description';
+app.append(instruction);

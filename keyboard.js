@@ -12,6 +12,8 @@ class Keyboard {
     this.capitalization = false;
     this.onKeyClick = onKeyClick;
     this.container = container;
+    this.langugage = 'en';
+    this.meta = 'false';
   }
 
   createKeysRow = (row) => {
@@ -22,8 +24,19 @@ class Keyboard {
       const key = document.createElement('button');
       key.className = 'key';
       key.id = Object.keys(row[i]);
-      const { name, shiftName } = Object.values(row[i])[0];
-      const label = this.capitalization && shiftName ? shiftName : name;
+      const {
+        name, shiftName, ruName, ruShiftName,
+      } = Object.values(row[i])[0];
+      let label;
+
+      if (this.capitalization && this.langugage === 'ru') {
+        label = ruShiftName || shiftName || name;
+      } else if (this.langugage === 'ru') {
+        label = ruName || name;
+      } else {
+        label = this.capitalization && shiftName ? shiftName : name;
+      }
+
       key.textContent = label;
 
       if (key.id === 'Space') {
@@ -130,6 +143,11 @@ class Keyboard {
       if (keyId === 'Backspace') {
         this.onKeyClick('\b');
       }
+
+      if (keyId === 'MetaRight' || keyId === 'MetaLeft') {
+        this.langugage = this.langugage === 'ru' ? 'en' : 'ru';
+        this.updateKeyboard();
+      }
     });
   };
 
@@ -150,6 +168,8 @@ class Keyboard {
           } else if (keyId === 'Tab') {
             event.preventDefault();
             this.onKeyClick('  ');
+          } else if (keyId === 'Space' && this.meta) {
+            this.langugage = !this.langugage;
           } else {
             this.onKeyClick(event.key);
           }
@@ -168,8 +188,16 @@ class Keyboard {
         event.preventDefault();
         this.onKeyClick('\n');
       }
+
       if (event.code === 'Backspace') {
         this.onKeyClick('\b');
+      }
+
+      if (event.key === 'Meta') {
+        this.langugage = this.langugage === 'ru' ? 'en' : 'ru';
+        this.updateKeyboard();
+        const key = document.getElementById(event.code);
+        key.classList.add('pressed');
       }
     });
 
