@@ -26,3 +26,8 @@ const handleKeyClick = (letter) => {
 const keyboard = new Keyboard(keyboardKontainer, handleKeyClick);
 
 keyboard.render();
+
+const descriptionText = document.createElement('p');
+descriptionText.textContent = 'The keyboard is created in MacOS';
+descriptionText.className = 'description';
+app.append(descriptionText);

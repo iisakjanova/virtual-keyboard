@@ -25,6 +25,11 @@ class Keyboard {
       const { name, shiftName } = Object.values(row[i])[0];
       const label = this.capitalization && shiftName ? shiftName : name;
       key.textContent = label;
+
+      if (key.id === 'Space') {
+        key.classList.add('space');
+      }
+
       keysRow.append(key);
     }
 
