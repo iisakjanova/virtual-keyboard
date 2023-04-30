@@ -15,9 +15,13 @@ const keyboardKontainer = document.createElement('div');
 keyboardKontainer.className = 'keyboard-container';
 app.append(keyboardKontainer);
 
-function handleKeyClick(letter) {
-  textInput.value += letter;
-}
+const handleKeyClick = (letter) => {
+  if (letter === '\b') {
+    textInput.value = textInput.value.slice(0, -1);
+  } else {
+    textInput.value += letter;
+  }
+};
 
 const keyboard = new Keyboard(keyboardKontainer, handleKeyClick);
 

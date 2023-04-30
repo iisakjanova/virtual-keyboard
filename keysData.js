@@ -77,8 +77,6 @@ export const FIFTH_ROW = [
 ];
 
 export const KEYS_TO_IGNORE_VALUE = {
-  Backspace: 'Backspace',
-  // Tab: 'Tab',
   CapsLock: 'CapsLock',
   Enter: 'Enter',
   ShiftLeft: 'ShiftLeft',
@@ -88,4 +86,5 @@ export const KEYS_TO_IGNORE_VALUE = {
   MetaLeft: 'MetaLeft',
   MetaRight: 'MetaRight',
   AltRight: 'AltRight',
+  Backspace: 'Backspace',
 };

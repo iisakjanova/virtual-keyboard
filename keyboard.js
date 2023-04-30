@@ -9,7 +9,7 @@ class Keyboard {
     this.thirdRow = THIRD_ROW;
     this.fourthRow = FOURTH_ROW;
     this.fifthRow = FIFTH_ROW;
-    this.shift = false;
+    this.capitalization = false;
     this.onKeyClick = onKeyClick;
     this.container = container;
   }
@@ -23,7 +23,7 @@ class Keyboard {
       key.className = 'key';
       key.id = Object.keys(row[i]);
       const { name, shiftName } = Object.values(row[i])[0];
-      const label = this.shift && shiftName ? shiftName : name;
+      const label = this.capitalization && shiftName ? shiftName : name;
       key.textContent = label;
       keysRow.append(key);
     }
@@ -32,15 +32,27 @@ class Keyboard {
   };
 
   handleShiftDown = (id) => {
-    this.shift = true;
+    this.capitalization = true;
     this.updateKeyboard();
     const keyShift = document.getElementById(id);
     keyShift.classList.add('pressed');
   };
 
   handleShiftUp = () => {
-    this.shift = false;
+    this.capitalization = false;
     this.updateKeyboard();
+  };
+
+  handleCapsLockUp = () => {
+    this.capitalization = !this.capitalization;
+    this.updateKeyboard();
+  };
+
+  handleCapsLockDown = (id) => {
+    this.capitalization = !this.capitalization;
+    this.updateKeyboard();
+    const key = document.getElementById(id);
+    key.classList.add('pressed');
   };
 
   updateKeyboard = () => {
@@ -90,6 +102,29 @@ class Keyboard {
           this.onKeyClick(event.target.innerText);
         }
       }
+
+      if (keyId === 'CapsLock' && !this.capitalization) {
+        this.handleCapsLockDown(keyId);
+      } else if (keyId === 'CapsLock' && this.capitalization) {
+        this.handleCapsLockUp();
+      }
+
+      if ((keyId === 'ShiftLeft' && !this.capitalization)
+          || (keyId === 'ShiftRight' && !this.capitalization)) {
+        this.handleShiftDown(keyId);
+      } else if ((keyId === 'ShiftLeft' && this.capitalization)
+                || (keyId === 'ShiftRight' && this.capitalization)) {
+        this.handleShiftUp();
+      }
+
+      if (keyId === 'Enter') {
+        event.preventDefault();
+        this.onKeyClick('\n');
+      }
+
+      if (keyId === 'Backspace') {
+        this.onKeyClick('\b');
+      }
     });
   };
 
@@ -102,7 +137,10 @@ class Keyboard {
       if (button) {
         button.classList.add('pressed');
         if (!KEYS_TO_IGNORE_VALUE[keyId]) {
-          if (keyId === 'ArrowLeft' || keyId === 'ArrowRight' || keyId === 'ArrowUp' || keyId === 'ArrowDown') {
+          if (keyId === 'ArrowLeft'
+              || keyId === 'ArrowRight'
+              || keyId === 'ArrowUp'
+              || keyId === 'ArrowDown') {
             this.onKeyClick(button.innerHTML);
           } else if (keyId === 'Tab') {
             event.preventDefault();
@@ -115,6 +153,18 @@ class Keyboard {
 
       if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
         this.handleShiftDown(event.code);
+      }
+
+      if (event.code === 'CapsLock') {
+        this.handleCapsLockDown(event.code);
+      }
+
+      if (event.code === 'Enter') {
+        event.preventDefault();
+        this.onKeyClick('\n');
+      }
+      if (event.code === 'Backspace') {
+        this.onKeyClick('\b');
       }
     });
 
@@ -129,6 +179,10 @@ class Keyboard {
 
       if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
         this.handleShiftUp();
+      }
+
+      if (event.code === 'CapsLock') {
+        this.handleCapsLockUp();
       }
     });
   };
