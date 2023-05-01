@@ -6,6 +6,11 @@ const app = document.createElement('div');
 app.className = 'app';
 page.append(app);
 
+const title = document.createElement('h1');
+title.innerText = 'RSS Virtual Keyboard';
+title.className = 'title';
+app.append(title);
+
 const textInput = document.createElement('textarea');
 textInput.className = 'textInput';
 textInput.value = '';

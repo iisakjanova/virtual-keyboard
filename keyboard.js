@@ -165,6 +165,7 @@ class Keyboard {
 
   addEvents = () => {
     document.addEventListener('keydown', (event) => {
+      event.preventDefault();
       const keyId = event.code;
       const button = document.getElementById(keyId);
 
@@ -213,6 +214,7 @@ class Keyboard {
     });
 
     document.addEventListener('keyup', (event) => {
+      event.preventDefault();
       const keyId = event.code;
       const button = document.getElementById(keyId);
 

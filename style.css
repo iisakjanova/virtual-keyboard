@@ -57,6 +57,7 @@
   transform: scale(1.2);
 }
 
-.description {
+.description,
+.title {
   text-align: center;
 }
