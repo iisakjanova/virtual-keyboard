@@ -12,7 +12,7 @@ class Keyboard {
     this.capitalization = false;
     this.onKeyClick = onKeyClick;
     this.container = container;
-    this.language = localStorage.getItem('language') || 'en';
+    this.language = Keyboard.getCookie('language') || 'en';
     this.meta = 'false';
   }
 
@@ -80,6 +80,18 @@ class Keyboard {
 
     this._render();
   };
+
+  static getCookie(name) {
+    const cookieValue = document.cookie.match(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    return cookieValue ? cookieValue.pop() : '';
+  }
+
+  static setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `expires=${d.toUTCString()}`;
+    document.cookie = `${name}=${value};${expires};path=/`;
+  }
 
   render = () => {
     this._render();
@@ -162,6 +174,7 @@ class Keyboard {
 
       if (keyId === 'MetaRight' || keyId === 'MetaLeft') {
         this.language = this.language === 'ru' ? 'en' : 'ru';
+        Keyboard.setCookie('language', this.language, 365);
         this.updateKeyboard();
       }
     });
@@ -210,7 +223,7 @@ class Keyboard {
 
       if (event.key === 'Meta') {
         this.language = this.language === 'ru' ? 'en' : 'ru';
-        localStorage.setItem('language', this.language);
+        Keyboard.setCookie('language', this.language, 365);
         this.updateKeyboard();
         const key = document.getElementById(event.code);
         key.classList.add('pressed');
